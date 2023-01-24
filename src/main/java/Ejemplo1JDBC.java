@@ -1,17 +1,15 @@
+import modelos.Categoria;
 import modelos.Producto;
+import repositorio.CategoriaRepoImpl;
 import repositorio.ProductoRepoImpl;
-import repositorio.ProductoRepositorio;
-import utilidades.ConexionBD;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import repositorio.Repositorio;
 
 
 public class Ejemplo1JDBC {
     public static void main(String[] args)  {
 
-        ProductoRepositorio<Producto> repo = new ProductoRepoImpl();
+        Repositorio<Producto> repo = new ProductoRepoImpl();
+        Repositorio<Categoria> repocat = new CategoriaRepoImpl();
 
         System.out.println("======================  Listar productos ====================");
         repo.listar().forEach(System.out::println);
@@ -42,7 +40,8 @@ public class Ejemplo1JDBC {
         repo.guardar(p);
         System.out.println("Buscando " + p.getCodigo_producto());
         System.out.println(repo.porCodigo(p.getCodigo_producto()));
-
+        System.out.println("======================  Listar Categorias ====================");
+        repocat.listar().forEach(System.out::println);
 
     }
 }

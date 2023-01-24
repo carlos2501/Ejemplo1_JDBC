@@ -4,12 +4,11 @@ package repositorio;
 import modelos.Producto;
 import utilidades.ConexionBD;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductoRepoImpl implements ProductoRepositorio <Producto>{
+public class ProductoRepoImpl implements Repositorio <Producto>{
 
     private static Connection getConexion() throws SQLException {
         return ConexionBD.abreConexion();
@@ -20,7 +19,7 @@ public class ProductoRepoImpl implements ProductoRepositorio <Producto>{
         List<Producto> productos = new ArrayList<>();
 
         try(Statement stmt = getConexion().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM producto")) {
+            ResultSet rs = stmt.executeQuery("SELECT * FROM producto")) {
             while (rs.next()) {
                 Producto p = crearProducto(rs);
                 productos.add(p);
@@ -92,6 +91,14 @@ public class ProductoRepoImpl implements ProductoRepositorio <Producto>{
         }
     }
 
+    @Override
+    public Producto porId(Integer id) {
+        return null;
+    }
+
+    @Override
+    public void borrarId(Integer id) { }
+
     private Producto crearProducto(ResultSet rs) throws SQLException {
         Producto p = new Producto();
         p.setCodigo_producto(rs.getString("codigo_producto"));
@@ -102,3 +109,4 @@ public class ProductoRepoImpl implements ProductoRepositorio <Producto>{
         return p;
     }
 }
+
