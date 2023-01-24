@@ -4,10 +4,7 @@ import modelos.Producto;
 import utilidades.ConexionBD;
 
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +17,7 @@ public class ProductoRepoImpl implements ProductoRepositorio{
     @Override
     public List listar() {
         List<Producto> productos = new ArrayList<>();
+
         try(Statement stmt = getConexion().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM producto")) {
             while (rs.next()) {
@@ -34,7 +32,19 @@ public class ProductoRepoImpl implements ProductoRepositorio{
 
     @Override
     public Producto porCodigo(String cod) {
-        return null;
+        Producto producto = null;
+
+        try(PreparedStatement stmt = getConexion().
+                prepareStatement("SELECT * FROM producto WHERE codigo_producto = ?")){
+            stmt.setString(1,cod);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                producto = crearProducto(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return producto;
     }
 
     @Override
@@ -44,7 +54,13 @@ public class ProductoRepoImpl implements ProductoRepositorio{
 
     @Override
     public void borrar(String cod) {
-
+        try(PreparedStatement stmt = getConexion().
+                prepareStatement("DELETE FROM producto WHERE codigo_producto= ?")){
+            stmt.setString(1, cod);
+            int rs = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private Producto crearProducto(ResultSet rs) throws SQLException {
